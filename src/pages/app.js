@@ -9,13 +9,34 @@ import {
   Text,
 } from '../components'
 import App from './app.style';
+import ServiceCep from '../services/cep';
 
 const AppPage = () => {
+  const serviceCep = new ServiceCep();
   const [show, setShow] = useState(false);
   const [cep, setCep] = useState('');
+  const [address, setAddress] = useState(null);
+  const [msgFeedback, setMsgFeedback] = useState('');
 
-  const onSearch = (e) => {
-    e.prevantDefault();
+  const onSearch = async (e) => {
+    e.preventDefault();
+    if (cep.length < 7) {
+      setMsgFeedback('Por favor, preencha o cep completo.');
+      setShow(false);
+      return null;
+    }
+
+    const data = await serviceCep.getCepCb(cep, 'myfn');
+
+    if (data.erro) {
+      setMsgFeedback('Cep invalido.');
+      setShow(false);
+    } else {
+      setAddress(data);
+      setShow(true);
+      setCep(''); 
+      setMsgFeedback('');
+    }
   }
 
   return (
@@ -28,18 +49,19 @@ const AppPage = () => {
             mask="11111-111"
             name="cep"
             value={cep}
-            onChange={setCep}
+            onChange={(e) => setCep(e.target.value)}
             type="text"
           />
-          <Button primary>Buscar</Button>
+          <Button primary onClick={onSearch}>Buscar</Button>
         </App.Form>
+        <App.SmallText>{msgFeedback}</App.SmallText>
       </Container>
       <Modal show={show} handleClose={() => setShow(false)}>
-        <Title>Rua Miguel Mentem</Title>
-        <Text>Vila Guilherme</Text>
-        <Text>São Paulo - SP</Text>
-        <Text>02050-010</Text>
-        <Map cep="08430-180" />
+        <Title>{address && address.logradouro}</Title>
+        <Text>{address && address.bairro}</Text>
+        <Text>{address && address.localidade}</Text>
+        <Text>{address && address.cep}</Text>
+        <Map cep={address && address.cep} />
       </Modal>
     </App>
   )

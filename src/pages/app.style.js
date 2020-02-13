@@ -9,4 +9,12 @@ App.Form = styled.div`
   width: 200px;
 `;
 
+App.SmallText = styled.small`
+  display: block;
+  font-family: Arial;
+  font-size: 10px;
+  margin: 0;
+  min-height: 10px;
+`;
+
 export default App;
