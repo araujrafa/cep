@@ -1,7 +1,9 @@
 ## Projeto CEP
 
-Para rodar o projeto execute:
+Para rodar o projeto instale as dependência
+### `npm install`
 
-### `yarn start`
+E depois
+### `npm start`
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
